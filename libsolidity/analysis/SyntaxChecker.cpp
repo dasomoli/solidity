@@ -421,7 +421,7 @@ bool SyntaxChecker::visit(UsingForDirective const& _usingFor)
 		m_errorReporter.syntaxError(
 			3349_error,
 			_usingFor.location(),
-			"The type has to be specified explicitly when attaching specific functions."
+			"The type has to be specified explicitly when binding specific functions."
 		);
 	if (_usingFor.global() && !_usingFor.typeName())
 		m_errorReporter.syntaxError(

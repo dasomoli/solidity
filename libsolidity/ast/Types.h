@@ -1272,7 +1272,7 @@ public:
 		bool saltSet = false;
 		/// true iff the function is called as arg1.fun(arg2, ..., argn).
 		/// This is achieved through the "using for" directive.
-		bool bound = false;
+		bool boundToType = false;
 
 		static Options withArbitraryParameters()
 		{
@@ -1287,7 +1287,7 @@ public:
 			result.gasSet = _type.gasSet();
 			result.valueSet = _type.valueSet();
 			result.saltSet = _type.saltSet();
-			result.bound = _type.bound();
+			result.boundToType = _type.boundToType();
 			return result;
 		}
 	};
@@ -1322,7 +1322,7 @@ public:
 	)
 	{
 		// In this constructor, only the "arbitrary Parameters" option should be used.
-		solAssert(!bound() && !gasSet() && !valueSet() && !saltSet());
+		solAssert(!boundToType() && !gasSet() && !valueSet() && !saltSet());
 	}
 
 	/// Detailed constructor, use with care.
@@ -1354,7 +1354,7 @@ public:
 			"Return parameter names list must match return parameter types list!"
 		);
 		solAssert(
-			!bound() || !m_parameterTypes.empty(),
+			!boundToType() || !m_parameterTypes.empty(),
 			"Attempted construction of bound function without self type"
 		);
 	}
@@ -1471,7 +1471,7 @@ public:
 	bool gasSet() const { return m_options.gasSet; }
 	bool valueSet() const { return m_options.valueSet; }
 	bool saltSet() const { return m_options.saltSet; }
-	bool bound() const { return m_options.bound; }
+	bool boundToType() const { return m_options.boundToType; }
 
 	/// @returns a copy of this type, where gas or value are set manually. This will never set one
 	/// of the parameters to false.

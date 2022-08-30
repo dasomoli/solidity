@@ -485,7 +485,7 @@ bool DeclarationTypeChecker::visit(UsingForDirective const& _usingFor)
 			m_errorReporter.fatalTypeError(
 				4357_error,
 				_usingFor.functionsOrLibrary().front()->location(),
-				"Library name expected. If you want to attach a function, use '{...}'."
+				"Library name expected. If you want to bind a function, use '{...}'."
 			);
 	}
 
