@@ -314,7 +314,7 @@ void DataFlowAnalyzer::clearValues(set<YulString> _variables)
 	// let a := 1
 	// let b := a
 	// let c := b
-	// let a := 2
+	// a := 2
 	// add(b, c)
 	// In the last line, we can replace c by b, but not b by a.
 	//
