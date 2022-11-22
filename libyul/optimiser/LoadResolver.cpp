@@ -59,16 +59,11 @@ void LoadResolver::visit(Expression& _e)
 
 	if (FunctionCall const* funCall = std::get_if<FunctionCall>(&_e))
 	{
-		for (auto location: { StoreLoadLocation::Memory, StoreLoadLocation::Storage })
-			if (funCall->functionName.name == m_loadFunctionName[static_cast<unsigned>(location)])
-			{
-				tryResolve(_e, location, funCall->arguments);
-				break;
-			}
-		if (
-			!m_containsMSize &&
-			toEVMInstruction(m_dialect, funCall->functionName.name) == evmasm::Instruction::KECCAK256
-		)
+		if (funCall->functionName.name == m_loadFunctionName[static_cast<unsigned>(StoreLoadLocation::Memory)])
+			tryResolve(_e, StoreLoadLocation::Memory, funCall->arguments);
+		else if (funCall->functionName.name == m_loadFunctionName[static_cast<unsigned>(StoreLoadLocation::Storage)])
+			tryResolve(_e, StoreLoadLocation::Storage, funCall->arguments);
+		else if (!m_containsMSize && funCall->functionName.name == m_dialect.hashFunction({}))
 		{
 			Identifier const* start = get_if<Identifier>(&funCall->arguments.at(0));
 			Identifier const* length = get_if<Identifier>(&funCall->arguments.at(1));
@@ -79,11 +74,8 @@ void LoadResolver::visit(Expression& _e)
 						_e = Identifier{debugDataOf(_e), *value};
 						return;
 					}
-		}
-
-
-		if (!m_containsMSize && funCall->functionName.name == m_dialect.hashFunction({}))
 			tryEvaluateKeccak(_e, funCall->arguments);
+		}
 	}
 }
 
