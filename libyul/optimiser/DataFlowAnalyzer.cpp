@@ -396,7 +396,7 @@ void DataFlowAnalyzer::clearKnowledgeIfInvalidated(Expression const& _expr)
 	if (sideEffects.invalidatesMemory())
 	{
 		m_state.environment.memory.clear();
-		m_state.environment.	keccak.clear();
+		m_state.environment.keccak.clear();
 	}
 }
 
