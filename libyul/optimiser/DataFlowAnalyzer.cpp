@@ -31,8 +31,6 @@
 #include <libyul/Exceptions.h>
 #include <libyul/Utilities.h>
 
-#include <libevmasm/Instruction.h>
-
 #include <libsolutil/CommonData.h>
 #include <libsolutil/cxx20.h>
 
@@ -448,7 +446,7 @@ std::optional<YulString> DataFlowAnalyzer::isSimpleLoad(
 optional<pair<YulString, YulString>> DataFlowAnalyzer::isKeccak(Expression const& _expression) const
 {
 	if (FunctionCall const* funCall = get_if<FunctionCall>(&_expression))
-		if (toEVMInstruction(m_dialect, funCall->functionName.name) == evmasm::Instruction::KECCAK256)
+		if (funCall->functionName.name == m_dialect.hashFunction({}))
 			if (Identifier const* start = std::get_if<Identifier>(&funCall->arguments.at(0)))
 				if (Identifier const* length = std::get_if<Identifier>(&funCall->arguments.at(1)))
 					return make_pair(start->name, length->name);
