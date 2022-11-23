@@ -3784,7 +3784,7 @@ bool TypeChecker::visit(Literal const& _literal)
 		{
 			string mantissaOrExponentErrorMessage;
 
-			if (!mantissa && ! exponent)
+			if (!mantissa && !exponent)
 				mantissaOrExponentErrorMessage = "mantissa and exponent that fit";
 			else if (!exponent)
 				mantissaOrExponentErrorMessage = "exponent that fits";
