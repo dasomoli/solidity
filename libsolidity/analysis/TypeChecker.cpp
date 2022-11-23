@@ -3785,18 +3785,19 @@ bool TypeChecker::visit(Literal const& _literal)
 			string mantissaOrExponentErrorMessage;
 
 			if (!mantissa && !exponent)
-				mantissaOrExponentErrorMessage = "mantissa and exponent that fit";
+				mantissaOrExponentErrorMessage = "Mantissa and exponent are";
 			else if (!exponent)
-				mantissaOrExponentErrorMessage = "exponent that fits";
+				mantissaOrExponentErrorMessage = "Exponent is";
 			else
-				mantissaOrExponentErrorMessage = "mantissa that fits";
+				mantissaOrExponentErrorMessage = "Mantissa is";
 
 			m_errorReporter.typeError(
 				5503_error,
 				_literal.location(),
 				fmt::format(
-					"This fractional number cannot be decomposed into a {} "
-					"the range of parameters of any possible suffix function.",
+					"This fractional number cannot be decomposed into a mantissa and decimal exponent "
+					"that fit the range of parameters of any possible suffix function. "
+					"{} out of range of the largest supported integer type.",
 					mantissaOrExponentErrorMessage
 				)
 			);
