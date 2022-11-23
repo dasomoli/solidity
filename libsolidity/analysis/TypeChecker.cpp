@@ -3957,16 +3957,16 @@ void TypeChecker::endVisit(UsingForDirective const& _usingFor)
 					)
 				)
 			)
-					m_errorReporter.typeError(
-						1147_error,
-						path->location(),
-						"The function \"" + joinHumanReadable(path->path(), ".") + "\" "+
-						"needs to have exactly one parameter of type " +
-						usingForType->canonicalName() +
-						" to be used for the operator " +
-						TokenTraits::friendlyName(*operator_) +
-						"."
-					);
+				m_errorReporter.typeError(
+					1147_error,
+					path->location(),
+					"The function \"" + joinHumanReadable(path->path(), ".") + "\" "+
+					"needs to have exactly one parameter of type " +
+					usingForType->canonicalName() +
+					" to be used for the operator " +
+					TokenTraits::friendlyName(*operator_) +
+					"."
+				);
 			else if (
 				(
 					parameterCount == 2 &&
@@ -4002,20 +4002,7 @@ void TypeChecker::endVisit(UsingForDirective const& _usingFor)
 
 			TypePointers const& returnParameterTypes = functionType->returnParameterTypes();
 			size_t const returnParameterCount = returnParameterTypes.size();
-			if (
-				TokenTraits::isCompareOp(*operator_) &&
-				(returnParameterCount != 1 || *returnParameterTypes.front() != *TypeProvider::boolean())
-			)
-				m_errorReporter.typeError(
-					7995_error,
-					path->location(),
-					"The function \"" + joinHumanReadable(path->path(), ".") + "\" "+
-					"needs to return exactly one value of type bool" +
-					" to be used for the operator " +
-					TokenTraits::friendlyName(*operator_) +
-					"."
-				);
-			else if (!TokenTraits::isCompareOp(*operator_))
+			if (!TokenTraits::isCompareOp(*operator_))
 			{
 				if (
 					returnParameterCount != 1 ||
@@ -4044,6 +4031,16 @@ void TypeChecker::endVisit(UsingForDirective const& _usingFor)
 						"."
 					);
 			}
+			else if (returnParameterCount != 1 || *returnParameterTypes.front() != *TypeProvider::boolean())
+				m_errorReporter.typeError(
+					7995_error,
+					path->location(),
+					"The function \"" + joinHumanReadable(path->path(), ".") + "\" "+
+					"needs to return exactly one value of type bool" +
+					" to be used for the operator " +
+					TokenTraits::friendlyName(*operator_) +
+					"."
+				);
 		}
 	}
 }
