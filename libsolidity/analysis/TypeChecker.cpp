@@ -1810,21 +1810,10 @@ void TypeChecker::endVisit(BinaryOperation const& _operation)
 		commonType = builtinResult.get();
 	else if (operatorDefinitionResult)
 	{
-		Type const* normalizedParameterType = userDefinedFunctionType->parameterTypes().at(0);
-		Type const* normalizedLeftType = leftType;
-		Type const* normalizedRightType = rightType;
-
-		if (auto const* parameterReference = dynamic_cast<ReferenceType const*>(normalizedParameterType))
-			normalizedParameterType = TypeProvider::withLocationIfReference(parameterReference->location(), normalizedParameterType);
-		if (auto const* leftReferenceType = dynamic_cast<ReferenceType const*>(normalizedLeftType))
-			normalizedLeftType = TypeProvider::withLocationIfReference(leftReferenceType->location(), normalizedLeftType);
-		if (auto const* rightReferenceType = dynamic_cast<ReferenceType const*>(normalizedRightType))
-			normalizedRightType = TypeProvider::withLocationIfReference(rightReferenceType->location(), normalizedRightType);
-
 		if (
 			userDefinedFunctionType->parameterTypes().size() != 2 ||
-			*normalizedLeftType != *normalizedParameterType ||
-			*normalizedRightType != *normalizedParameterType
+			!leftType->sameTypeOrPointerTo(*userDefinedFunctionType->parameterTypes().at(0)) ||
+			!rightType->sameTypeOrPointerTo(*userDefinedFunctionType->parameterTypes().at(0))
 		)
 			m_errorReporter.typeError(
 				5653_error,
@@ -3924,17 +3913,19 @@ void TypeChecker::endVisit(UsingForDirective const& _usingFor)
 				continue;
 			}
 
+			bool identicalFirstTwoParameters = (parameterCount < 2 || *parameterTypes.at(0) == *parameterTypes.at(1));
+			bool isUnaryOnlyOperator = (!TokenTraits::isBinaryOp(*operator_) && TokenTraits::isUnaryOp(*operator_));
+			bool isBinaryOnlyOperator =
+				(TokenTraits::isBinaryOp(*operator_) && !TokenTraits::isUnaryOp(*operator_)) ||
+				*operator_ == Token::Add;
+
+			bool firstParameterMatchesUsingFor =
+				parameterCount == 0 ||
+				usingForType->sameTypeOrPointerTo(*parameterTypes.front(), true /* _excludeLocation */);
+
 			if (
-				(
-					(TokenTraits::isBinaryOp(*operator_) && !TokenTraits::isUnaryOp(*operator_)) ||
-					*operator_ == Token::Add ||
-					TokenTraits::isCompareOp(*operator_)
-				) &&
-				(
-					parameterCount != 2 ||
-					*parameterTypes.at(0) !=
-					*parameterTypes.at(1)
-				)
+				(isBinaryOnlyOperator || TokenTraits::isCompareOp(*operator_)) &&
+				(parameterCount != 2 || !identicalFirstTwoParameters)
 			)
 				m_errorReporter.typeError(
 					1884_error,
@@ -3946,17 +3937,7 @@ void TypeChecker::endVisit(UsingForDirective const& _usingFor)
 					TokenTraits::friendlyName(*operator_) +
 					"."
 				);
-			else if (
-				!TokenTraits::isBinaryOp(*operator_) &&
-				TokenTraits::isUnaryOp(*operator_) &&
-				(
-					parameterCount != 1 ||
-					(
-						*TypeProvider::withLocationIfReference(DataLocation::Storage, parameterTypes.front()) !=
-						*TypeProvider::withLocationIfReference(DataLocation::Storage, usingForType)
-					)
-				)
-			)
+			else if (isUnaryOnlyOperator && (parameterCount != 1 || !firstParameterMatchesUsingFor))
 				m_errorReporter.typeError(
 					1147_error,
 					path->location(),
@@ -3967,28 +3948,7 @@ void TypeChecker::endVisit(UsingForDirective const& _usingFor)
 					TokenTraits::friendlyName(*operator_) +
 					"."
 				);
-			else if (
-				(
-					parameterCount == 2 &&
-					(
-						(*parameterTypes.at(0) != *parameterTypes.at(1)) ||
-						(
-							*TypeProvider::withLocationIfReference(DataLocation::Storage, parameterTypes.at(0)) !=
-							*TypeProvider::withLocationIfReference(DataLocation::Storage, usingForType)
-						)
-					)
-				) ||
-				(
-					parameterCount == 1 &&
-					(
-						*TypeProvider::withLocationIfReference(DataLocation::Storage, parameterTypes.at(0)) !=
-						*TypeProvider::withLocationIfReference(DataLocation::Storage, usingForType)
-					)
-				) ||
-				(
-					parameterCount != 1 && parameterCount != 2
-				)
-			)
+			else if (parameterCount == 0 || parameterCount >= 3 || !firstParameterMatchesUsingFor || !identicalFirstTwoParameters)
 				m_errorReporter.typeError(
 					7617_error,
 					path->location(),
@@ -4006,10 +3966,7 @@ void TypeChecker::endVisit(UsingForDirective const& _usingFor)
 			{
 				if (
 					returnParameterCount != 1 ||
-					(
-						*TypeProvider::withLocationIfReference(DataLocation::Storage, returnParameterTypes.front()) !=
-						*TypeProvider::withLocationIfReference(DataLocation::Storage, usingForType)
-					)
+					!usingForType->sameTypeOrPointerTo(*returnParameterTypes.front(), true /* _excludeLocation */)
 				)
 					m_errorReporter.typeError(
 						7743_error,

@@ -425,20 +425,10 @@ Result<FunctionDefinition const*> Type::operatorDefinition(Token _token, ASTNode
 			);
 			solAssert(functionType && !functionType->parameterTypes().empty());
 
-			Type const* normalizedType = this;
-			if (auto const* referenceType = dynamic_cast<ReferenceType const*>(normalizedType))
-				normalizedType = TypeProvider::withLocationIfReference(referenceType->location(), normalizedType);
-
-			Type const* normalizedFirstParameterType = functionType->parameterTypes().front();
-			if (auto const* referenceType = dynamic_cast<ReferenceType const*>(normalizedFirstParameterType))
-				normalizedFirstParameterType = TypeProvider::withLocationIfReference(referenceType->location(), normalizedFirstParameterType);
-
+			size_t parameterCount = function.parameterList().parameters().size();
 			if (
-				*normalizedType == *normalizedFirstParameterType &&
-				(
-					(_unaryOperation && function.parameterList().parameters().size() == 1) ||
-					(!_unaryOperation && function.parameterList().parameters().size() == 2)
-				)
+				sameTypeOrPointerTo(*functionType->parameterTypes().front()) &&
+				(_unaryOperation ? parameterCount == 1 : parameterCount == 2)
 			)
 				matchingDefinitions.insert(&function);
 		}
