@@ -37,15 +37,15 @@ contract C {
     }
 }
 // ----
-// TypeError 5653: (408-413): User defined binary operator + not compatible with types struct S memory and struct S calldata.
-// TypeError 5653: (423-428): User defined binary operator + not compatible with types struct S memory and struct S storage ref.
+// TypeError 5653: (408-413): User-defined binary operator + not compatible with types struct S memory and struct S calldata.
+// TypeError 5653: (423-428): User-defined binary operator + not compatible with types struct S memory and struct S storage ref.
 // TypeError 2271: (438-443): Built-in binary operator + cannot be applied to types struct S calldata and struct S memory. No matching user-defined operator found.
 // TypeError 2271: (453-458): Built-in binary operator + cannot be applied to types struct S storage ref and struct S memory. No matching user-defined operator found.
-// TypeError 5653: (511-516): User defined binary operator - not compatible with types struct S calldata and struct S memory.
-// TypeError 5653: (526-531): User defined binary operator - not compatible with types struct S calldata and struct S storage ref.
+// TypeError 5653: (511-516): User-defined binary operator - not compatible with types struct S calldata and struct S memory.
+// TypeError 5653: (526-531): User-defined binary operator - not compatible with types struct S calldata and struct S storage ref.
 // TypeError 2271: (541-546): Built-in binary operator - cannot be applied to types struct S memory and struct S calldata. No matching user-defined operator found.
 // TypeError 2271: (556-561): Built-in binary operator - cannot be applied to types struct S storage ref and struct S calldata. No matching user-defined operator found.
-// TypeError 5653: (613-618): User defined binary operator * not compatible with types struct S storage ref and struct S calldata.
-// TypeError 5653: (628-633): User defined binary operator * not compatible with types struct S storage ref and struct S memory.
+// TypeError 5653: (613-618): User-defined binary operator * not compatible with types struct S storage ref and struct S calldata.
+// TypeError 5653: (628-633): User-defined binary operator * not compatible with types struct S storage ref and struct S memory.
 // TypeError 2271: (643-648): Built-in binary operator * cannot be applied to types struct S calldata and struct S storage ref. No matching user-defined operator found.
 // TypeError 2271: (658-663): Built-in binary operator * cannot be applied to types struct S memory and struct S storage ref. No matching user-defined operator found.
