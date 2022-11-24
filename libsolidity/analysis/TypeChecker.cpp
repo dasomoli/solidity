@@ -1818,13 +1818,12 @@ void TypeChecker::endVisit(BinaryOperation const& _operation)
 			m_errorReporter.typeError(
 				5653_error,
 				_operation.location(),
-				"User defined binary operator " +
-				string(TokenTraits::toString(_operation.getOperator())) +
-				" not compatible with types " +
-				leftType->humanReadableName() +
-				" and " +
-				rightType->humanReadableName() +
-				"."
+				fmt::format(
+					"User defined binary operator {} not compatible with types {} and {}.",
+					string(TokenTraits::toString(_operation.getOperator())),
+					leftType->humanReadableName(),
+					rightType->humanReadableName()
+				)
 			);
 		else if (userDefinedFunctionType->returnParameterTypes().size() == 1)
 			commonType = userDefinedFunctionType->parameterTypes().at(0);
@@ -1833,14 +1832,14 @@ void TypeChecker::endVisit(BinaryOperation const& _operation)
 		m_errorReporter.typeError(
 			2271_error,
 			_operation.location(),
-			"Built-in binary operator " +
-			string(TokenTraits::toString(_operation.getOperator())) +
-			" cannot be applied to types " +
-			leftType->humanReadableName() +
-			" and " +
-			rightType->humanReadableName() + "." +
-			(!builtinResult.message().empty() ? " " + builtinResult.message() : "") +
-			(!operatorDefinitionResult.message().empty() ? " " + operatorDefinitionResult.message() : "")
+			fmt::format(
+				"Built-in binary operator {} cannot be applied to types {} and {}.{}{}",
+				string(TokenTraits::toString(_operation.getOperator())),
+				leftType->humanReadableName(),
+				rightType->humanReadableName(),
+				(!builtinResult.message().empty() ? " " + builtinResult.message() : ""),
+				(!operatorDefinitionResult.message().empty() ? " " + operatorDefinitionResult.message() : "")
+			)
 		);
 
 	_operation.annotation().commonType = commonType;
@@ -1872,14 +1871,14 @@ void TypeChecker::endVisit(BinaryOperation const& _operation)
 			m_errorReporter.warning(
 				3149_error,
 				_operation.location(),
-				"The result type of the " +
-				operation +
-				" operation is equal to the type of the first operand (" +
-				commonType->humanReadableName() +
-				") ignoring the (larger) type of the second operand (" +
-				rightType->humanReadableName() +
-				") which might be unexpected. Silence this warning by either converting "
-				"the first or the second operand to the type of the other."
+				fmt::format(
+					"The result type of the {} operation is equal to the type of the first operand ({}) "
+					"ignoring the (larger) type of the second operand ({}) which might be unexpected. "
+					"Silence this warning by either converting the first or the second operand to the type of the other.",
+					operation,
+					commonType->humanReadableName(),
+					rightType->humanReadableName()
+				)
 			);
 	}
 }
