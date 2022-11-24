@@ -1810,8 +1810,8 @@ void TypeChecker::endVisit(BinaryOperation const& _operation)
 		commonType = builtinResult.get();
 	else if (operatorDefinitionResult)
 	{
+		solAssert(userDefinedFunctionType->parameterTypes().size() == 2);
 		if (
-			userDefinedFunctionType->parameterTypes().size() != 2 ||
 			!leftType->sameTypeOrPointerTo(*userDefinedFunctionType->parameterTypes().at(0)) ||
 			!rightType->sameTypeOrPointerTo(*userDefinedFunctionType->parameterTypes().at(0))
 		)
