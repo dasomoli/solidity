@@ -24,7 +24,7 @@ contract C {
 
 // ----
 // TypeError 2271: (272-277): Built-in binary operator + cannot be applied to types struct S storage ref and struct S storage ref. No matching user-defined operator found.
-// TypeError 5653: (287-297): User-defined binary operator + not compatible with types struct S memory and bool.
+// TypeError 5653: (287-297): User-defined binary operator + only accepts type struct S memory and is not compatible with types struct S memory and bool.
 // TypeError 2271: (307-315): Built-in binary operator + cannot be applied to types bool and struct S storage ref.
 // TypeError 4907: (325-330): Built-in unary operator - cannot be applied to type struct S storage pointer. No matching user-defined operator found.
 // TypeError 4907: (340-342): Built-in unary operator - cannot be applied to type struct S storage ref. No matching user-defined operator found.
