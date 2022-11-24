@@ -1819,8 +1819,9 @@ void TypeChecker::endVisit(BinaryOperation const& _operation)
 				5653_error,
 				_operation.location(),
 				fmt::format(
-					"User-defined binary operator {} not compatible with types {} and {}.",
+					"User-defined binary operator {} only accepts type {} and is not compatible with types {} and {}.",
 					string(TokenTraits::toString(_operation.getOperator())),
+					userDefinedFunctionType->parameterTypes().at(0)->humanReadableName(),
 					leftType->humanReadableName(),
 					rightType->humanReadableName()
 				)
