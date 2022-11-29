@@ -24,9 +24,9 @@ The first part, ``A``, can be one of:
 - The name of a library (``using L for uint;``) -
   all non-private functions of the library are bound to the type
   as member functions
-- a list of assignments of file-level or internal library functions to operators
+- a list of assignments of file-level or public/internal/private library functions to operators
   (``using {f as +, g as -} for T;``) - the functions will be bound to the type (``T``)
-  as operators. Following binary operators are allowed to be used on the list: ``|``,
+  as operators. The following binary operators are allowed to be used on the list: ``|``,
   ``^``, ``&``, ``+``, ``-``, ``*``, ``/``, ``%``, ``==``, ``!=``, ``<``, ``>``, ``<=``,
   ``>=``, ``<<``, ``>>``, ``**``. Allowed unary operators are: ``~``, ``!``, ``-``.
   If an operator can be both binary and unary, it is allowed to have each variant specified
