@@ -225,7 +225,7 @@ void DataFlowAnalyzer::operator()(Block& _block)
 
 optional<YulString> DataFlowAnalyzer::storageValue(YulString _key) const
 {
-	if (YulString const* value = util::valueOrNullptr(m_state.environment.storage, _key))
+	if (YulString const* value = valueOrNullptr(m_state.environment.storage, _key))
 		return *value;
 	else
 		return nullopt;
@@ -233,7 +233,7 @@ optional<YulString> DataFlowAnalyzer::storageValue(YulString _key) const
 
 optional<YulString> DataFlowAnalyzer::memoryValue(YulString _key) const
 {
-	if (YulString const* value = util::valueOrNullptr(m_state.environment.memory, _key))
+	if (YulString const* value = valueOrNullptr(m_state.environment.memory, _key))
 		return *value;
 	else
 		return nullopt;
@@ -241,7 +241,7 @@ optional<YulString> DataFlowAnalyzer::memoryValue(YulString _key) const
 
 optional<YulString> DataFlowAnalyzer::keccakValue(YulString _start, YulString _length) const
 {
-	if (YulString const* value = util::valueOrNullptr(m_state.environment.keccak, make_pair(_start, _length)))
+	if (YulString const* value = valueOrNullptr(m_state.environment.keccak, make_pair(_start, _length)))
 		return *value;
 	else
 		return nullopt;
@@ -475,7 +475,7 @@ void DataFlowAnalyzer::joinKnowledgeHelper(
 	// of m_state.environment.memory and thus any overlapping write would have cleared the keys
 	// that are not known to be different inside m_state.environment.memory already.
 	cxx20::erase_if(_this, mapTuple([&_older](auto&& key, auto&& currentValue){
-		YulString const* oldValue = util::valueOrNullptr(_older, key);
+		YulString const* oldValue = valueOrNullptr(_older, key);
 		return !oldValue || *oldValue != currentValue;
 	}));
 }
